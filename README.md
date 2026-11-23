@@ -1,20 +1,21 @@
-# 🎀 Birthday Bestie – 3D Website
+# 🎀 Birthday Website – Kiran (Royal Invite Theme)
 
-Open hote hi 3D gift box -> tap -> voice + 3D "Happy Birthday dear Bestie" -> swipe wale 3D wish pages.
+Envelope -> tap -> voice + music + confetti -> Happy Birthday Dear Kiran Bestie card -> golden hearts -> 12 wish pages -> cake -> reply.
+Mobile, tablet aur desktop, sab pe chalta hai.
 
-## Files (sab ek hi folder mein rakhna)
-- index.html  - page ka structure
-- style.css   - design, colours, 3D effects
-- script.js   - animation, voice, swipe pages
-- wishes.js   - NAME aur saare wish texts (yahan edit karo)
-- audio.js    - voice (andar hi embedded hai, alag audio file ki zaroorat nahi)
+## Files (sab ek hi folder mein)
+- index.html - structure
+- style.css  - design
+- script.js  - animation, sound, interactions
+- wishes.js  - NAME, DATE, PHONE aur saare wish texts (yahan edit karo)
+- audio.js   - voice (embedded)
+- hero.js    - "Happy Birthday Dear Kiran Bestie" image (embedded)
 
 ## GitHub Pages
-1. Repo banao -> Add file -> Upload files -> in 5 files ko upload karo (folder nahi chahiye).
+1. Repo banao -> Add file -> Upload files -> in 6 files ko upload karo (koi folder nahi chahiye).
 2. Settings -> Pages -> Branch: main / root -> Save.
 3. Link: https://<username>.github.io/<repo>/
 
-## Edit karna
-- Naam badalna: wishes.js mein NAME: "Bestie"
-- Text badalna: wishes.js ke PAGES mein.
+## Edit
+- wishes.js: NAME, DATE (birthday date), PHONE (WhatsApp reply ke liye, jaise 919876543210), texts.
 - Fonts ke liye internet chahiye (Google Fonts).

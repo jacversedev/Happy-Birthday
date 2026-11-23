@@ -3,59 +3,127 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Happy Birthday dear Bestie 🎀</title>
+<meta name="theme-color" content="#fbf4ea">
+<title>Happy Birthday Kiran 🎀</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;1,600&family=Great+Vibes&family=Playfair+Display:ital,wght@1,700&family=Poppins:wght@500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600&family=Great+Vibes&family=Playfair+Display:ital,wght@0,600;1,600&family=Poppins:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
-  <symbol id="bow" viewBox="0 0 100 70">
-    <path d="M50 33C30 4 4 8 6 28c2 17 26 17 44 5z" fill="currentColor"/>
-    <path d="M50 33C70 4 96 8 94 28c-2 17-26 17-44 5z" fill="currentColor"/>
-    <path d="M47 37 34 67l11-7 7 8 1-31zM53 37l13 30-11-7-7 8-1-31z" fill="currentColor" opacity=".85"/>
-    <ellipse cx="50" cy="33" rx="9" ry="8" fill="currentColor"/>
-    <ellipse cx="50" cy="33" rx="9" ry="8" fill="rgba(0,0,0,.2)"/>
-  </symbol>
+  <defs>
+    <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f6e3a1"/><stop offset=".45" stop-color="#d3a94f"/>
+      <stop offset=".75" stop-color="#a97d33"/><stop offset="1" stop-color="#f2dc92"/>
+    </linearGradient>
+    <linearGradient id="wine" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#e8588a"/><stop offset="1" stop-color="#8f1d4a"/>
+    </linearGradient>
+    <symbol id="heart" viewBox="0 0 32 29.6"><path d="M23.6 0c-3.4 0-6.3 1.9-7.6 4.7C14.7 1.9 11.8 0 8.4 0 3.8 0 0 3.8 0 8.4c0 9.4 9.5 11.9 16 21.2 6.1-9.3 16-12.1 16-21.2C32 3.8 28.2 0 23.6 0z"/></symbol>
+    <symbol id="bow" viewBox="0 0 100 70">
+      <path d="M50 33C30 4 4 8 6 28c2 17 26 17 44 5z" fill="currentColor"/>
+      <path d="M50 33C70 4 96 8 94 28c-2 17-26 17-44 5z" fill="currentColor"/>
+      <path d="M47 37 34 67l11-7 7 8 1-31zM53 37l13 30-11-7-7 8-1-31z" fill="currentColor" opacity=".85"/>
+      <ellipse cx="50" cy="33" rx="9" ry="8" fill="currentColor"/>
+      <ellipse cx="50" cy="33" rx="9" ry="8" fill="rgba(0,0,0,.2)"/>
+    </symbol>
+  </defs>
 </svg>
 
-<div id="sky"></div>
 <canvas id="fx"></canvas>
 
-<section id="gate" class="scr">
-  <div class="cubewrap">
-    <div class="cube">
-      <i></i><i></i><i></i><i></i>
-      <i><svg class="bow" viewBox="0 0 100 70"><use href="#bow"/></svg></i>
-      <i></i>
+<!-- 1. ENVELOPE -->
+<section id="gate">
+  <div class="env" id="env">
+    <div class="glow"></div>
+    <div class="paper">
+      <p class="eyebrow">You are invited to celebrate</p>
+      <h1 class="script">Happy<br>Birthday</h1>
+      <p class="who script" id="whoG"></p>
     </div>
+    <div class="flapw"><div class="flap"></div></div>
+    <button class="seal" id="seal" aria-label="Envelope kholo"><span id="seaL"></span></button>
   </div>
-  <h1 class="script">Ek chhota sa surprise<br>sirf tumhare liye</h1>
-  <button id="open" class="btn">Tap to open 🎀</button>
-  <p class="hint">Sound on rakhna 🔊</p>
+  <p class="tap">✦ Tap to reveal ✦</p>
 </section>
 
-<section id="intro" class="scr hide">
-  <div id="stage3d"><div id="pop"><div id="title"></div></div></div>
-  <button id="go" class="btn hide">Surprise dekho 🎀</button>
-</section>
+<!-- 2. INVITE PAGE -->
+<main id="main" class="hide">
+  <div class="wrap">
 
-<section id="book" class="scr hide">
-  <div id="deck"></div>
-</section>
+    <header class="sec hero">
+      <div class="reveal"><div class="heroFrame"><img id="heroImg" alt="Happy Birthday Dear Kiran Bestie"></div></div>
+      <p class="hint">Neeche scroll karo ↓</p>
+    </header>
 
-<div id="ctl" class="hide">
-  <button id="prev" aria-label="Pichla page">‹</button>
-  <div id="dots"></div>
-  <button id="nxt" aria-label="Agla page">›</button>
-</div>
+    <section class="sec" id="hearts">
+      <div class="reveal">
+        <p class="eyebrow">Save the date</p>
+        <h2 class="script big">Dil pe tap karo</h2>
+        <p class="note">Teeno dil kholo, surprise chhupa hai 💗</p>
+        <div class="hrow">
+          <button class="hrt" data-t="Happy"><div class="in"><span class="f"><svg><use href="#heart" fill="url(#gold)"/></svg><em>✦</em></span><span class="b"><svg><use href="#heart" fill="url(#wine)"/></svg><em class="script">Happy</em></span></div></button>
+          <button class="hrt" data-t="Birthday"><div class="in"><span class="f"><svg><use href="#heart" fill="url(#gold)"/></svg><em>✦</em></span><span class="b"><svg><use href="#heart" fill="url(#wine)"/></svg><em class="script">Birthday</em></span></div></button>
+          <button class="hrt" id="h3"><div class="in"><span class="f"><svg><use href="#heart" fill="url(#gold)"/></svg><em>✦</em></span><span class="b"><svg><use href="#heart" fill="url(#wine)"/></svg><em class="script" id="h3t"></em></span></div></button>
+        </div>
+        <div id="dateBox" class="dateBox">
+          <p class="eyebrow" id="dateTxt"></p>
+          <p class="script big" id="clockTitle"></p>
+          <div class="clock"><div><b id="cd">0</b><i>Din</i></div><div><b id="ch">0</b><i>Ghante</i></div><div><b id="cm">0</b><i>Minute</i></div><div><b id="cs">0</b><i>Second</i></div></div>
+        </div>
+      </div>
+    </section>
 
-<button id="snd" class="hide" aria-label="Awaaz dubara sunao">🔊</button>
+    <section class="sec head reveal">
+      <p class="eyebrow">Dil se, sirf tumhare liye</p>
+      <h2 class="script big">Meri taraf se wishes</h2>
+    </section>
+
+    <div id="wishes"></div>
+
+    <section class="sec" id="cakeSec">
+      <div class="reveal">
+        <p class="eyebrow">Cake time</p>
+        <h2 class="script big">Make a wish ✨</h2>
+        <div class="cake" id="cake">
+          <div class="candles"><i><b></b></i><i><b></b></i><i><b></b></i><i><b></b></i></div>
+          <div class="t2"></div><div class="t1"></div><div class="plate"></div>
+        </div>
+        <button class="btn" id="blow">Candles bujhao 🌬️</button>
+        <p class="note" id="wishMsg"></p>
+      </div>
+    </section>
+
+    <section class="sec" id="replySec">
+      <div class="reveal formCard">
+        <p class="eyebrow">Reply do</p>
+        <h2 class="script big">Dil se ek message</h2>
+        <label>Tumhara naam<input id="fn" type="text" autocomplete="name"></label>
+        <p class="lab">Aaj ka mood</p>
+        <div class="chips" id="chips">
+          <button type="button" class="on">Khush 🥰</button><button type="button">Emotional 🥹</button><button type="button">Party mood 🥳</button>
+        </div>
+        <label>Mere liye message<textarea id="fm" rows="4" placeholder="Yahan likho…"></textarea></label>
+        <button class="btn" id="send">Reply bhejo 💌</button>
+      </div>
+    </section>
+
+    <footer class="sec foot">
+      <p class="script big" id="fromTxt"></p>
+      <p class="note">Hamesha tumhare saath 💗</p>
+      <button class="btn" id="again">Phir se dekho 🎉</button>
+    </footer>
+
+  </div>
+</main>
+
+<button id="snd" class="hide" aria-label="Sound on/off">🔊</button>
 <button id="warn" class="btn hide">🔊 Awaaz ke liye tap karo</button>
 
 <script src="audio.js"></script>
+<script src="hero.js"></script>
 <script src="wishes.js"></script>
 <script src="script.js"></script>
 </body>

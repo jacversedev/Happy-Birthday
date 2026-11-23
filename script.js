@@ -1,141 +1,174 @@
 (() => {
-const $ = s => document.querySelector(s);
-const W = window.WISHES, reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-const setVh = () => document.documentElement.style.setProperty('--vh', innerHeight * .01 + 'px');
+const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
+const C = window.WISHES, reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const nm = s => s.replace(/\{NAME\}/g, C.NAME);
 
-/* ---------- voice (audio is embedded in audio.js, no file path needed) ---------- */
+/* ---------- text from config ---------- */
+$('#whoG').textContent = 'for ' + C.NAME;
+$('#seaL').textContent = C.INITIAL;
+$('#h3t').textContent = C.NAME;
+$('#fromTxt').textContent = C.FROM;
+$('#fn').value = C.NAME;
+$('#heroImg').src = window.HERO_IMG;
+document.title = 'Happy Birthday ' + C.NAME + ' 🎀';
+
+/* ---------- sound: voice (embedded) + soft music-box melody (WebAudio) ---------- */
 const au = new Audio(window.WISH_AUDIO); au.preload = 'auto';
-const warn = $('#warn');
+const warn = $('#warn'), snd = $('#snd');
+let actx, master, muted = false, musicT, musicOn = false;
 function say() {
   au.currentTime = 0;
   const p = au.play();
   if (p) p.then(() => warn.classList.add('hide')).catch(() => warn.classList.remove('hide'));
+  if (actx && actx.state === 'suspended') actx.resume();
 }
-warn.onclick = say; $('#snd').onclick = say;
-
-/* ---------- balloons ---------- */
-const sky = $('#sky'), bc = [['#ff8fb8','#d63a78'],['#ffd0e2','#f08bb0'],['#ffe08a','#e9a93c'],['#ffffff','#f3b8cf'],['#ff6f9f','#b82a62'],['#c9b6ff','#8c6fe0']];
-for (let i = 0; i < 10; i++) {
-  const b = document.createElement('div'), c = bc[i % 6];
-  b.className = 'bl';
-  b.style.cssText = `--x:${(i * 10 + Math.random() * 6) | 0}%;--s:${(60 + Math.random() * 50) | 0};--c:${c[0]};--c2:${c[1]};--t:${(14 + Math.random() * 10) | 0}s;--dl:-${(Math.random() * 20) | 0}s;--z:${(-250 + Math.random() * 350) | 0}px`;
-  sky.appendChild(b);
+warn.onclick = () => { say(); startMusic(); };
+function initCtx() {
+  if (actx) return;
+  const AC = window.AudioContext || window.webkitAudioContext; if (!AC) return;
+  actx = new AC(); master = actx.createGain(); master.gain.value = .16; master.connect(actx.destination);
 }
+const song = [[7,.75],[7,.25],[9,1],[7,1],[12,1],[11,2],[7,.75],[7,.25],[9,1],[7,1],[14,1],[12,2],
+              [7,.75],[7,.25],[19,1],[16,1],[12,1],[11,1],[9,1],[17,.75],[17,.25],[16,1],[12,1],[14,1],[12,2]];
+function playSong() {
+  if (!actx) return;
+  const beat = .5; let t = actx.currentTime + .1, total = 0;
+  song.forEach(([n, b]) => {
+    const f = 261.63 * Math.pow(2, n / 12), d = b * beat;
+    [[f, 'triangle', 1], [f * 2, 'sine', .25]].forEach(([fr, ty, v]) => {
+      const o = actx.createOscillator(), g = actx.createGain();
+      o.type = ty; o.frequency.value = fr;
+      g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(v, t + .015);
+      g.gain.exponentialRampToValueAtTime(.001, t + d * 1.9);
+      o.connect(g); g.connect(master); o.start(t); o.stop(t + d * 2);
+    });
+    t += d; total += d;
+  });
+  musicT = setTimeout(playSong, (total + 3) * 1000);
+}
+function startMusic() { if (musicOn || !actx) return; musicOn = true; playSong(); }
+snd.onclick = () => {
+  muted = !muted; au.muted = muted;
+  if (master) master.gain.value = muted ? 0 : .16;
+  snd.textContent = muted ? '🔇' : '🔊';
+  if (!muted) { initCtx(); startMusic(); if (au.ended) say(); }
+};
 
-/* ---------- confetti (2D canvas, stops itself when done) ---------- */
-const cv = $('#fx'), cx = cv.getContext('2d'); let P = [], running = false, dpr = 1;
+/* ---------- sparkles + confetti (one light canvas) ---------- */
+const cv = $('#fx'), cx = cv.getContext('2d'); let dpr = 1, P = [], S = [], fxOn = false;
 function sizeFx() { dpr = Math.min(devicePixelRatio || 1, 2); cv.width = innerWidth * dpr; cv.height = innerHeight * dpr; }
+function mkSpark() {
+  return { x: Math.random() * cv.width, y: Math.random() * cv.height, r: (1 + Math.random() * 2.4) * dpr,
+    vy: -(.12 + Math.random() * .3) * dpr, ph: Math.random() * 6.28 };
+}
 function burst(n = 150) {
-  const cols = ['#ff7fae','#ffd0e2','#ffc857','#ffffff','#e8588a','#8fd3ff'];
+  const cols = ['#e8588a', '#ffd0e2', '#f3cf86', '#ffffff', '#c9a15a', '#b8304f'];
   for (let i = 0; i < n; i++) {
     const a = -Math.PI * (.1 + Math.random() * .8), v = (8 + Math.random() * 14) * dpr;
     P.push({ x: cv.width / 2, y: cv.height * .6, vx: Math.cos(a) * v, vy: Math.sin(a) * v, r: Math.random() * 6, vr: (Math.random() - .5) * .3,
       f: Math.random() * 6, w: (6 + Math.random() * 7) * dpr, h: (4 + Math.random() * 5) * dpr, c: cols[i % 6] });
   }
-  if (!running) { running = true; requestAnimationFrame(fxTick); }
 }
-function fxTick() {
+function fxTick(t) {
+  requestAnimationFrame(fxTick);
   cx.clearRect(0, 0, cv.width, cv.height);
+  if (fxOn) S.forEach(s => {
+    s.y += s.vy; if (s.y < -10) { s.y = cv.height + 10; s.x = Math.random() * cv.width; }
+    cx.globalAlpha = .35 + .35 * Math.sin(t / 500 + s.ph); cx.fillStyle = '#e1b85c';
+    cx.beginPath(); cx.arc(s.x, s.y, s.r, 0, 6.3); cx.fill();
+  });
+  cx.globalAlpha = 1;
   P = P.filter(p => p.y < cv.height + 40);
   P.forEach(p => {
     p.vy += .34 * dpr; p.vx *= .985; p.vy *= .985; p.x += p.vx; p.y += p.vy; p.r += p.vr; p.f += .2;
     cx.save(); cx.translate(p.x, p.y); cx.rotate(p.r); cx.scale(1, Math.cos(p.f));
     cx.fillStyle = p.c; cx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h); cx.restore();
   });
-  if (P.length) requestAnimationFrame(fxTick); else { running = false; cx.clearRect(0, 0, cv.width, cv.height); }
 }
+sizeFx(); for (let i = 0; i < (reduce ? 10 : 38); i++) S.push(mkSpark());
+addEventListener('resize', sizeFx); requestAnimationFrame(fxTick);
 
-/* ---------- 3D extruded title ---------- */
-const T = $('#title'), lines = `<b class="l1">Happy</b><b class="l2">Birthday</b><b class="l3">dear ${W.NAME}</b>`;
-for (let i = 15; i >= 0; i--) {
-  const d = document.createElement('div'); d.className = 'ly' + (i ? '' : ' front'); d.innerHTML = lines;
-  if (i) {
-    const k = i / 15;
-    d.style.transform = `translateZ(${-i * 1.8}px)`;
-    d.style.color = `rgb(${190 - 120 * k | 0},${50 - 40 * k | 0},${105 - 65 * k | 0})`;
-  } else d.style.transform = 'translateZ(2px)';
-  T.appendChild(d);
-}
-
-/* ---------- wish pages ---------- */
-const deck = $('#deck'), dots = $('#dots'), N = W.PAGES.length;
-const cards = W.PAGES.map((p, i) => {
-  const c = document.createElement('article'); c.className = 'card k-' + p.k;
-  c.innerHTML = `<svg class="bow" viewBox="0 0 100 70"><use href="#bow"/></svg><div class="body"><h2 class="ttl script${p.t.length > 22 ? ' long' : ''}">${p.t}</h2>${p.s ? `<p class="sub">${p.s}</p>` : ''}<div class="txt">${p.b.map(x => `<p>${x}</p>`).join('')}</div>${p.e ? `<p class="em">${p.e}</p>` : ''}${i === N - 1 ? '<button class="btn" id="again">Phir se dekho 🎉</button>' : ''}</div><span class="num">${i + 1} / ${N}</span>`;
-  deck.appendChild(c); dots.appendChild(document.createElement('i')); return c;
+/* ---------- wish cards ---------- */
+const box = $('#wishes'), N = C.PAGES.length;
+C.PAGES.forEach((p, i) => {
+  const t = nm(p.t), w = document.createElement('div'); w.className = 'reveal';
+  w.innerHTML = `<article class="wcard k-${p.k}"><svg class="bow" viewBox="0 0 100 70"><use href="#bow"/></svg><p class="no">${String(i + 1).padStart(2, '0')} / ${String(N).padStart(2, '0')}</p><h3 class="ttl script${t.length > 22 ? ' long' : ''}">${t}</h3>${p.s ? `<p class="sub">${p.s}</p>` : ''}<div class="sep"></div><div class="txt">${p.b.map(x => `<p>${nm(x)}</p>`).join('')}</div>${p.e ? `<p class="em">${p.e}</p>` : ''}</article>`;
+  box.appendChild(w);
 });
-let cur = 0, tilt = { rx: 0, ry: 0 }, dx = 0, drag = false, sx = 0, t0 = 0, navT;
-
-function fit() {
-  cards.forEach(c => {
-    const t = c.querySelector('.txt'); let f = 1.3; t.style.fontSize = f + 'rem';
-    while (t.scrollHeight > t.clientHeight + 1 && f > .88) { f -= .04; t.style.fontSize = f + 'rem'; }
+if (matchMedia('(hover:hover) and (pointer:fine)').matches && !reduce) {
+  $$('.wcard').forEach(c => {
+    c.addEventListener('mousemove', e => {
+      const r = c.getBoundingClientRect(), x = (e.clientX - r.left) / r.width - .5, y = (e.clientY - r.top) / r.height - .5;
+      c.style.transform = `perspective(900px) rotateY(${x * 8}deg) rotateX(${-y * 6}deg)`;
+    });
+    c.addEventListener('mouseleave', () => c.style.transform = '');
   });
 }
-function place(i, x = 0) {
-  const c = cards[i], d = i - cur; let tf, op = 1;
-  if (d < 0) { tf = 'translate3d(-135%,0,0) rotateZ(-22deg) rotateY(-40deg)'; op = 0; }
-  else if (d === 0) tf = `translate3d(${x}px,0,0) rotateX(${tilt.rx}deg) rotateY(${x * .06 + tilt.ry}deg) rotateZ(${x * .04}deg)`;
-  else { tf = `translate3d(0,${d * 16}px,${-d * 70}px) scale(${1 - d * .04})`; op = d > 3 ? 0 : 1 - d * .12; }
-  c.style.transform = tf; c.style.opacity = op; c.style.zIndex = d < 0 ? 0 : 50 - d;
-  c.style.pointerEvents = d === 0 ? 'auto' : 'none';
-}
-function layout() {
-  cards.forEach((_, i) => place(i));
-  [...dots.children].forEach((e, i) => e.classList.toggle('on', i === cur));
-}
-function nav() { deck.classList.add('nav'); clearTimeout(navT); navT = setTimeout(() => deck.classList.remove('nav'), 800); }
-function go(n) {
-  const k = Math.max(0, Math.min(N - 1, cur + n));
-  dx = 0; nav();
-  if (k !== cur) { cur = k; if (cur === N - 1) setTimeout(() => burst(120), 500); }
-  layout();
-}
-$('#prev').onclick = () => go(-1); $('#nxt').onclick = () => go(1);
-addEventListener('keydown', e => { if (e.key === 'ArrowRight') go(1); if (e.key === 'ArrowLeft') go(-1); });
-deck.addEventListener('click', e => { if (e.target.id === 'again') { cur = 0; nav(); layout(); burst(); } });
 
-deck.addEventListener('pointerdown', e => {
-  if (e.target.closest('button')) return;
-  drag = true; sx = e.clientX; dx = 0; t0 = e.timeStamp; cards[cur].classList.add('drag');
-});
-addEventListener('pointermove', e => {
-  mx = e.clientX / innerWidth * 2 - 1; my = e.clientY / innerHeight * 2 - 1;
-  if (drag) { dx = e.clientX - sx; place(cur, dx); }
-  else if (phase === 'book' && e.pointerType === 'mouse') { tilt.ry = mx * 8; tilt.rx = -my * 6; place(cur); }
-});
-function release(e, cancel) {
-  if (!drag) return; drag = false; cards[cur].classList.remove('drag');
-  const v = dx / Math.max(e.timeStamp - t0, 1);
-  if (!cancel && (dx < -70 || v < -.5)) go(1); else if (!cancel && (dx > 70 || v > .5)) go(-1); else { dx = 0; nav(); layout(); }
-}
-addEventListener('pointerup', e => release(e, false));
-addEventListener('pointercancel', e => release(e, true));
+/* ---------- scroll reveal ---------- */
+const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), { threshold: .12 });
+const observeAll = () => $$('.reveal').forEach(el => io.observe(el));
 
-/* ---------- flow: gate -> intro (voice + 3D title) -> book ---------- */
-let phase = 'gate', mx = 0, my = 0;
-function tick(n) {
-  if (phase !== 'intro') return; requestAnimationFrame(tick);
-  const s = n / 1000;
-  T.style.transform = `rotateX(${-my * 8}deg) rotateY(${(reduce ? 0 : Math.sin(s * .8) * 22) + mx * 18}deg)`;
+/* ---------- hearts + countdown ---------- */
+let flipped = 0, clockT;
+$$('.hrt').forEach(h => h.addEventListener('click', () => {
+  if (h.classList.contains('flip')) return;
+  h.classList.add('flip'); burst(30);
+  if (++flipped === 3) setTimeout(() => {
+    $('#dateBox').classList.add('show'); burst(120); startClock();
+  }, 900);
+}));
+function startClock() {
+  const day = new Date(C.DATE + 'T00:00:00');
+  $('#dateTxt').textContent = day.toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' });
+  const start = day.getTime(), end = start + 864e5;
+  function tick() {
+    const now = Date.now(); let target = start, title;
+    if (now < start) title = 'Birthday shuru hone mein…';
+    else if (now < end) { target = end; title = 'Aaj ka din sirf tumhara hai 💗'; }
+    else { target = now; title = 'Birthday beet gaya, yaadein hamesha rahengi 💗'; }
+    let d = Math.max(0, target - now);
+    const s = Math.floor(d / 1e3) % 60, m = Math.floor(d / 6e4) % 60, h = Math.floor(d / 36e5) % 24, dd = Math.floor(d / 864e5);
+    $('#clockTitle').textContent = title;
+    $('#cd').textContent = dd; $('#ch').textContent = h; $('#cm').textContent = m; $('#cs').textContent = s;
+  }
+  tick(); clearInterval(clockT); clockT = setInterval(tick, 1000);
 }
-function toBook() {
-  if (phase !== 'intro') return; phase = 'book';
-  $('#intro').classList.add('hide'); $('#book').classList.remove('hide');
-  $('#ctl').classList.remove('hide'); fit(); layout(); burst(100);
-}
-$('#open').onclick = () => {
-  say();
-  phase = 'intro';
-  $('#gate').classList.add('hide'); $('#intro').classList.remove('hide'); $('#snd').classList.remove('hide');
-  burst(); requestAnimationFrame(tick);
-  setTimeout(() => $('#go').classList.remove('hide'), 3500);
-  au.addEventListener('ended', () => setTimeout(toBook, 3000), { once: true });
-  setTimeout(toBook, 14000);
+
+/* ---------- cake ---------- */
+const cake = $('#cake'), blow = $('#blow');
+blow.onclick = () => {
+  const out = cake.classList.toggle('out');
+  blow.textContent = out ? 'Phir se jalao 🕯️' : 'Candles bujhao 🌬️';
+  $('#wishMsg').textContent = out ? 'Wish maang li? Ab sab sach hoga ✨💗' : '';
+  if (out) { burst(160); setTimeout(() => burst(100), 350); }
 };
-$('#go').onclick = toBook;
 
-addEventListener('resize', () => { setVh(); sizeFx(); fit(); });
-setVh(); sizeFx(); layout();
-if (document.fonts && document.fonts.ready) document.fonts.ready.then(fit);
+/* ---------- reply form ---------- */
+$('#chips').addEventListener('click', e => {
+  const b = e.target.closest('button'); if (!b) return;
+  $$('#chips button').forEach(x => x.classList.remove('on')); b.classList.add('on');
+});
+$('#send').onclick = () => {
+  const mood = $('#chips .on').textContent, name = $('#fn').value.trim() || C.NAME, msg = $('#fm').value.trim();
+  const text = `Hii 💗 ${name} ki taraf se reply!\nMood: ${mood}\n\n${msg || 'Thank you so much for the birthday surprise! 🥹🎀'}`;
+  if (C.PHONE) window.open('https://wa.me/' + C.PHONE + '?text=' + encodeURIComponent(text), '_blank');
+  else if (navigator.share) navigator.share({ text }).catch(() => {});
+  else window.open('https://wa.me/?text=' + encodeURIComponent(text), '_blank');
+  burst(80);
+};
+$('#again').onclick = () => { scrollTo({ top: 0, behavior: 'smooth' }); setTimeout(() => burst(140), 600); };
+
+/* ---------- open the envelope ---------- */
+const gate = $('#gate'); let opened = false;
+function openEnv() {
+  if (opened) return; opened = true;
+  say(); initCtx();
+  gate.classList.add('open');
+  setTimeout(() => { gate.classList.add('zoom'); burst(180); $('#main').classList.remove('hide'); document.body.classList.add('ready'); observeAll(); fxOn = true; snd.classList.remove('hide'); }, 1300);
+  setTimeout(() => gate.classList.add('gone'), 2500);
+  setTimeout(startMusic, 3600);
+}
+$('#env').addEventListener('click', openEnv);
+$('#seal').addEventListener('click', e => { e.stopPropagation(); openEnv(); });
 })();
