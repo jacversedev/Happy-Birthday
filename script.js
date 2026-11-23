@@ -120,8 +120,6 @@ $$('.hrt').forEach(h => h.addEventListener('click', () => {
 function showDate() {
   const day = new Date(C.DATE + 'T00:00:00');
   $('#dateTxt').textContent = day.toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' });
-  const t = $('#clockTitle'), c = document.querySelector('.clock');
-  if (t) t.remove(); if (c) c.remove();
 }
 
 /* ---------- cake ---------- */
