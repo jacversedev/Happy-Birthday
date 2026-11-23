@@ -8,7 +8,6 @@ $('#whoG').textContent = 'for ' + C.NAME;
 $('#seaL').textContent = C.INITIAL;
 $('#h3t').textContent = C.NAME;
 $('#fromTxt').textContent = C.FROM;
-$('#fn').value = C.NAME;
 $('#heroImg').src = window.HERO_IMG;
 document.title = 'Happy Birthday ' + C.NAME + ' 🎀';
 
@@ -144,19 +143,6 @@ blow.onclick = () => {
   if (out) { burst(160); setTimeout(() => burst(100), 350); }
 };
 
-/* ---------- reply form ---------- */
-$('#chips').addEventListener('click', e => {
-  const b = e.target.closest('button'); if (!b) return;
-  $$('#chips button').forEach(x => x.classList.remove('on')); b.classList.add('on');
-});
-$('#send').onclick = () => {
-  const mood = $('#chips .on').textContent, name = $('#fn').value.trim() || C.NAME, msg = $('#fm').value.trim();
-  const text = `Hii 💗 ${name} ki taraf se reply!\nMood: ${mood}\n\n${msg || 'Thank you so much for the birthday surprise! 🥹🎀'}`;
-  if (C.PHONE) window.open('https://wa.me/' + C.PHONE + '?text=' + encodeURIComponent(text), '_blank');
-  else if (navigator.share) navigator.share({ text }).catch(() => {});
-  else window.open('https://wa.me/?text=' + encodeURIComponent(text), '_blank');
-  burst(80);
-};
 $('#again').onclick = () => { scrollTo({ top: 0, behavior: 'smooth' }); setTimeout(() => burst(140), 600); };
 
 /* ---------- open the envelope ---------- */

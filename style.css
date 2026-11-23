@@ -102,16 +102,6 @@ body::before{content:"";position:fixed;inset:0;z-index:-1;background:var(--pat),
 .out .candles b{animation:none;opacity:0}
 @keyframes flick{from{transform:scale(1) rotate(-3deg)}to{transform:scale(.92,1.1) rotate(3deg)}}
 
-/* form */
-.formCard{padding:34px 22px;border-radius:28px;background:linear-gradient(165deg,#fffaf3,#f3e1cf);border:1.5px solid var(--gold);box-shadow:inset 0 0 0 6px rgba(255,255,255,.45),0 30px 50px -18px rgba(90,26,58,.45);text-align:left}
-.formCard .eyebrow,.formCard .big{text-align:center;display:block}
-.formCard label,.formCard .lab{display:block;font:600 .75rem 'Poppins';letter-spacing:.12em;text-transform:uppercase;color:#8a6a3a;margin-top:16px}
-.formCard input,.formCard textarea{display:block;width:100%;margin-top:6px;padding:13px 14px;border-radius:12px;border:1.5px solid #e2cfae;background:#fffdf8;font:500 1rem 'Poppins';color:var(--ink);resize:vertical;outline:0}
-.formCard input:focus,.formCard textarea:focus{border-color:var(--rose);box-shadow:0 0 0 3px rgba(217,79,132,.18)}
-.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
-.chips button{border:1.5px solid #e2cfae;background:#fffdf8;border-radius:999px;padding:9px 14px;font:500 .9rem 'Poppins';color:var(--ink);cursor:pointer}
-.chips button.on{background:linear-gradient(135deg,#e8588a,#8f1d4a);color:#fff;border-color:transparent}
-#send{display:block;margin:22px auto 0}
 .foot{padding-bottom:110px}
 #snd{position:fixed;z-index:130;right:14px;bottom:max(16px,env(safe-area-inset-bottom));width:48px;height:48px;border-radius:50%;border:0;font-size:1.2rem;background:linear-gradient(135deg,#e8588a,#8f1d4a);box-shadow:0 8px 18px rgba(143,29,74,.45);cursor:pointer;color:#fff}
 #warn{position:fixed;z-index:131;left:50%;transform:translateX(-50%);bottom:max(76px,env(safe-area-inset-bottom));white-space:nowrap;padding:11px 22px;font-size:.9rem}

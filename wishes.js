@@ -1,8 +1,7 @@
 window.WISHES = {
   NAME: "Kiran",
   INITIAL: "K",
-  DATE: "2026-11-23",      // birthday ki date (YYYY-MM-DD)
-  PHONE: "",               // WhatsApp reply ke liye apna number, jaise 919876543210 (khaali chhodo to contact chunne ka option aayega)
+  DATE: "2026-11-24",      // birthday ki date (YYYY-MM-DD)
   FROM: "Tumhari Bestie",
   PAGES: [
     { k: "pink", t: "Happiest Birthdayyy!!", s: "“Gorgeous”",
