@@ -1,21 +1,20 @@
-# 🎀 Birthday Bestie 3D Website
+# 🎀 Birthday Bestie – 3D Website
 
-Open hote hi 3D "Happy Birthday dear Bestie" + voice, phir 3D photo carousel.
+Open hote hi 3D gift box -> tap -> voice + 3D "Happy Birthday dear Bestie" -> swipe wale 3D wish pages.
 
-## Folder structure
-```
-index.html
-style.css
-script.js
-assets/
-  1.jpg ... 8.jpg   (wish images)
-  wish.mp3          (voice)
-```
+## Files (sab ek hi folder mein rakhna)
+- index.html  - page ka structure
+- style.css   - design, colours, 3D effects
+- script.js   - animation, voice, swipe pages
+- wishes.js   - NAME aur saare wish texts (yahan edit karo)
+- audio.js    - voice (andar hi embedded hai, alag audio file ki zaroorat nahi)
 
-## GitHub Pages pe live karne ke steps
-1. GitHub pe naya repo banao (Public).
-2. `index.html` aur `assets` folder upload karo (Add file → Upload files).
-3. Settings → Pages → Branch: `main` / root → Save.
-4. 1-2 min baad link milega: `https://<username>.github.io/<repo>/`
+## GitHub Pages
+1. Repo banao -> Add file -> Upload files -> in 5 files ko upload karo (folder nahi chahiye).
+2. Settings -> Pages -> Branch: main / root -> Save.
+3. Link: https://<username>.github.io/<repo>/
 
-> Local pe sirf double-click se kabhi audio/images block ho sakte hain, to `python -m http.server` chalake kholo.
+## Edit karna
+- Naam badalna: wishes.js mein NAME: "Bestie"
+- Text badalna: wishes.js ke PAGES mein.
+- Fonts ke liye internet chahiye (Google Fonts).

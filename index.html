@@ -6,33 +6,57 @@
 <title>Happy Birthday dear Bestie 🎀</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:ital,wght@1,600&family=Poppins:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;1,600&family=Great+Vibes&family=Playfair+Display:ital,wght@1,700&family=Poppins:wght@500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<canvas id="c"></canvas>
 
-<div id="gate" class="screen">
-  <div class="gift">🎁</div>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="bow" viewBox="0 0 100 70">
+    <path d="M50 33C30 4 4 8 6 28c2 17 26 17 44 5z" fill="currentColor"/>
+    <path d="M50 33C70 4 96 8 94 28c-2 17-26 17-44 5z" fill="currentColor"/>
+    <path d="M47 37 34 67l11-7 7 8 1-31zM53 37l13 30-11-7-7 8-1-31z" fill="currentColor" opacity=".85"/>
+    <ellipse cx="50" cy="33" rx="9" ry="8" fill="currentColor"/>
+    <ellipse cx="50" cy="33" rx="9" ry="8" fill="rgba(0,0,0,.2)"/>
+  </symbol>
+</svg>
+
+<div id="sky"></div>
+<canvas id="fx"></canvas>
+
+<section id="gate" class="scr">
+  <div class="cubewrap">
+    <div class="cube">
+      <i></i><i></i><i></i><i></i>
+      <i><svg class="bow" viewBox="0 0 100 70"><use href="#bow"/></svg></i>
+      <i></i>
+    </div>
+  </div>
   <h1 class="script">Ek chhota sa surprise<br>sirf tumhare liye</h1>
-  <button id="openBtn" class="btn">Tap to open 🎀</button>
+  <button id="open" class="btn">Tap to open 🎀</button>
   <p class="hint">Sound on rakhna 🔊</p>
+</section>
+
+<section id="intro" class="scr hide">
+  <div id="stage3d"><div id="pop"><div id="title"></div></div></div>
+  <button id="go" class="btn hide">Surprise dekho 🎀</button>
+</section>
+
+<section id="book" class="scr hide">
+  <div id="deck"></div>
+</section>
+
+<div id="ctl" class="hide">
+  <button id="prev" aria-label="Pichla page">‹</button>
+  <div id="dots"></div>
+  <button id="nxt" aria-label="Agla page">›</button>
 </div>
 
-<button id="snd" class="hide" aria-label="Sound on/off">🔊</button>
-<button id="next" class="btn hide">Surprise dekho 🎀</button>
+<button id="snd" class="hide" aria-label="Awaaz dubara sunao">🔊</button>
+<button id="warn" class="btn hide">🔊 Awaaz ke liye tap karo</button>
 
-<div id="gallery" class="screen hide">
-  <h2 class="script">Tere liye, meri Bestie 💗</h2>
-  <div class="stage" id="stage"><div class="ring" id="ring"></div></div>
-  <p class="hint">Swipe karo ↔ &nbsp;·&nbsp; tap karke bada karo</p>
-</div>
-
-<div id="lb" class="hide"><img id="lbImg" alt="Birthday wish"><b>✕</b></div>
-
-<audio id="wish" src="assets/wish.mp3" preload="auto"></audio>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="audio.js"></script>
+<script src="wishes.js"></script>
 <script src="script.js"></script>
 </body>
 </html>
