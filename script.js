@@ -108,30 +108,20 @@ if (matchMedia('(hover:hover) and (pointer:fine)').matches && !reduce) {
 const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), { threshold: .12 });
 const observeAll = () => $$('.reveal').forEach(el => io.observe(el));
 
-/* ---------- hearts + countdown ---------- */
-let flipped = 0, clockT;
+/* ---------- hearts + date ---------- */
+let flipped = 0;
 $$('.hrt').forEach(h => h.addEventListener('click', () => {
   if (h.classList.contains('flip')) return;
   h.classList.add('flip'); burst(30);
   if (++flipped === 3) setTimeout(() => {
-    $('#dateBox').classList.add('show'); burst(120); startClock();
+    $('#dateBox').classList.add('show'); burst(120); showDate();
   }, 900);
 }));
-function startClock() {
+function showDate() {
   const day = new Date(C.DATE + 'T00:00:00');
   $('#dateTxt').textContent = day.toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' });
-  const start = day.getTime(), end = start + 864e5;
-  function tick() {
-    const now = Date.now(); let target = start, title;
-    if (now < start) title = 'Birthday shuru hone mein…';
-    else if (now < end) { target = end; title = 'Aaj ka din sirf tumhara hai 💗'; }
-    else { target = now; title = 'Birthday beet gaya, yaadein hamesha rahengi 💗'; }
-    let d = Math.max(0, target - now);
-    const s = Math.floor(d / 1e3) % 60, m = Math.floor(d / 6e4) % 60, h = Math.floor(d / 36e5) % 24, dd = Math.floor(d / 864e5);
-    $('#clockTitle').textContent = title;
-    $('#cd').textContent = dd; $('#ch').textContent = h; $('#cm').textContent = m; $('#cs').textContent = s;
-  }
-  tick(); clearInterval(clockT); clockT = setInterval(tick, 1000);
+  const t = $('#clockTitle'), c = document.querySelector('.clock');
+  if (t) t.remove(); if (c) c.remove();
 }
 
 /* ---------- cake ---------- */
